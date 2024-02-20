@@ -1,0 +1,6 @@
+@_3ai.solutions.Saferpay.Client_HostAddress = http://localhost:5096
+
+GET {{_3ai.solutions.Saferpay.Client_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
