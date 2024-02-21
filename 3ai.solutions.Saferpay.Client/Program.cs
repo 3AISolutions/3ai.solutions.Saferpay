@@ -7,7 +7,7 @@ if (saferpayConfig is not null && saferpayConfig.IsEnabled)
     builder.Services.AddHttpClient<SaferpayServiceClient>(client =>
     {
         client.BaseAddress = new Uri(saferpayConfig.BaseUrl);
-        client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{saferpayConfig.Username}:{saferpayConfig.Password}")));
+        client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{saferpayConfig.Username}:{saferpayConfig.Password}")));
     });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -25,10 +25,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapGet("/", () => "Hello World!");
-// app.MapPost("/api/saferpay", async (SaferpayServiceClient client) =>
-// {
-//     // var response = await client.
-//     return response;
-// });
+app.MapPost("/api/saferpay", async (SaferpayServiceClient client) =>
+{
+    var response = "";//await client.tr
+    return response;
+});
 
 app.Run();
