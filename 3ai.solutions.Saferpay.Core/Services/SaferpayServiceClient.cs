@@ -16,7 +16,7 @@
 #pragma warning disable 8604 // Disable "CS8604 Possible null reference argument for parameter"
 #pragma warning disable 8625 // Disable "CS8625 Cannot convert null literal to non-nullable reference type"
 
-namespace 3ai.solutions.Saferpay
+namespace _3ai.solutions.Saferpay
 {
     using System = global::System;
 
@@ -46,7 +46,6 @@ namespace 3ai.solutions.Saferpay
         public string BaseUrl
         {
             get { return _baseUrl; }
-            [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(_baseUrl))]
             set
             {
                 _baseUrl = value;
