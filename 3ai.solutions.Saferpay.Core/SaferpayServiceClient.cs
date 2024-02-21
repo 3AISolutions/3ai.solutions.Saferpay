@@ -32,7 +32,8 @@ namespace _3ai.solutions.Saferpay
 
         public SaferpayServiceClient(System.Net.Http.HttpClient httpClient)
         {
-            BaseUrl = "https://www.saferpay.com/api/Payment/v1";
+            //BaseUrl = "https://www.saferpay.com/api/Payment/v1";
+            BaseUrl = httpClient.BaseAddress.ToString();
             _httpClient = httpClient;
         }
 

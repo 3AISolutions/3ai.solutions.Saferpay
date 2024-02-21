@@ -1,6 +1,15 @@
+using _3ai.solutions.Saferpay;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpClient<_3ai.solutions.Saferpay.SaferpayServiceClient>();
+var saferpayConfig = builder.Configuration.GetSection("Saferpay").Get<SaferpayConfig>();
+if (saferpayConfig is not null && saferpayConfig.IsEnabled)
+    builder.Services.AddHttpClient<SaferpayServiceClient>(client =>
+    {
+        client.BaseAddress = new Uri(saferpayConfig.BaseUrl);
+        client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{saferpayConfig.Username}:{saferpayConfig.Password}")));
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -14,5 +23,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapGet("/", () => "Hello World!");
+// app.MapPost("/api/saferpay", async (SaferpayServiceClient client) =>
+// {
+//     // var response = await client.
+//     return response;
+// });
 
 app.Run();
