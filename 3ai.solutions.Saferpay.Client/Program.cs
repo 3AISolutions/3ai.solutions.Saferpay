@@ -27,6 +27,7 @@ app.UseHttpsRedirection();
 app.MapGet("/", () => "Hello World!");
 app.MapPost("/api/saferpay", async (SaferpayServiceClient client) =>
 {
+    //client.pa
     var response = "";//await client.tr
     return response;
 });
