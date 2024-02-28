@@ -23,15 +23,20 @@ namespace _3ai.solutions.Saferpay
         private readonly string _baseUri;
         private readonly KeyValuePair<string, string> _authHeader;
         private readonly string _customerId;
+        private readonly string _terminalId;
+
         public SaferpayService(SaferpayConfig saferpayConfig)
         {
             _baseUri = saferpayConfig.BaseUrl;
             _customerId = saferpayConfig.CustomerId;
+            _terminalId = saferpayConfig.TerminalId;
             _authHeader = new KeyValuePair<string, string>("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{saferpayConfig.Username}:{saferpayConfig.Password}")));
         }
 
         public PaymentPageInitializeRS PaymentPageInitialize(PaymentPageInitializeRQ request)
         {
+            if (string.IsNullOrEmpty(request.TerminalId))
+                request.TerminalId = _terminalId;
             return Invoke<PaymentPageInitializeRS, PaymentPageInitializeRQ>("Payment/v1/PaymentPage/Initialize", request, "POST");
         }
 

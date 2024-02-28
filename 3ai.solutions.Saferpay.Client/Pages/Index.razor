@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using _3ai.solutions.Saferpay.Models;
 @inject _3ai.solutions.Saferpay.SaferpayService saferpayService;
-@inject Microsoft.Extensions.Options.IOptions<SaferpayConfig> saferpayConfig;
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
@@ -17,7 +16,6 @@ Welcome to your new app.
     {
         var response = saferpayService.PaymentPageInitialize(new PaymentPageInitializeRQ()
             {
-                TerminalId = saferpayConfig.Value.TerminalId,
                 Payment = new Payment()
                 {
                     Amount = new Amount()
