@@ -12,7 +12,7 @@ Welcome to your new app.
 
 @code
 {
-    string url;
+    string url = string.Empty;
     protected override void OnInitialized()
     {
         var response = saferpayService.PaymentPageInitialize(new PaymentPageInitializeRQ()
