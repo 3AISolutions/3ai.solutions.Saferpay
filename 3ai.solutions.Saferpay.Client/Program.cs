@@ -1,20 +1,13 @@
-using _3ai.solutions.Saferpay;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using _3ai.solutions.Saferpay.Client.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
-builder.Services.AddScoped<SaferpayService>(sp =>
-{
-    var saferpayConfig = new SaferpayConfig
-    {
-        BaseUrl = builder.Configuration["Saferpay:BaseUrl"],
-        Username = builder.Configuration["Saferpay:Username"],
-        Password = builder.Configuration["Saferpay:Password"]
-    };
-    return new SaferpayService(saferpayConfig);
-}); 
+builder.Services.AddServerSideBlazor();
+builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 
@@ -27,12 +20,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
-
-app.MapRazorPages();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
 
 app.Run();

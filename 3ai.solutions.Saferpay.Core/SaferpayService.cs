@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using _3ai.solutions.Saferpay.Models;
 
 namespace _3ai.solutions.Saferpay
