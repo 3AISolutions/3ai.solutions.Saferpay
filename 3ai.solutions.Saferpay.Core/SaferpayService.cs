@@ -72,9 +72,12 @@ namespace _3ai.solutions.Saferpay
             using (var webClient = new NoKeepAliveWebClient
             {
                 BaseAddress = _baseUri,
+                Encoding = System.Text.Encoding.UTF8
             })
             {
                 webClient.Headers.Add(_authHeader.Key, _authHeader.Value);
+                webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
+                webClient.Headers.Add("Accept", "application/json");
 
                 if (request.RequestHeader == null)
                     request.RequestHeader = new RequestHeader();
@@ -84,9 +87,7 @@ namespace _3ai.solutions.Saferpay
                 if (string.IsNullOrEmpty(request.RequestHeader.RequestId))
                     request.RequestHeader.RequestId = Guid.NewGuid().ToString();
 
-                webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                webClient.Headers.Add("Accept", "application/json");
-                webClient.Encoding = System.Text.Encoding.UTF8;
+
                 string responseString = webClient.UploadString(uri, "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request));
 
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<Tout>(responseString);

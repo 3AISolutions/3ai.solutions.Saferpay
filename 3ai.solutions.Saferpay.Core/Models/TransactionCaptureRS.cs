@@ -1,8 +1,7 @@
 namespace _3ai.solutions.Saferpay.Models
 {
-    public class TransactionCaptureRS
+    public class TransactionCaptureRS : BaseResponse
     {
-        public RequestHeader RequestHeader { get; set; }
         public string CaptureId { get; set; }
         public string Status { get; set; }
         public string Date { get; set; }
