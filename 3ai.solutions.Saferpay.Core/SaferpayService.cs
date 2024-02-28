@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using _3ai.solutions.Saferpay.Models;
-//   <ProjectReference Include="..\3ai.solutions.Saferpay.Core\3ai.solutions.Saferpay.Core.csproj" />
+
 namespace _3ai.solutions.Saferpay
 {
     public class SaferpayService
