@@ -1,35 +1,25 @@
-using _3ai.solutions.Saferpay;
-
 var builder = WebApplication.CreateBuilder(args);
 
-var saferpayConfig = builder.Configuration.GetSection("Saferpay").Get<SaferpayConfig>();
-if (saferpayConfig is not null && saferpayConfig.IsEnabled)
-    builder.Services.AddHttpClient<SaferpayServiceClient>(client =>
-    {
-        client.BaseAddress = new Uri(saferpayConfig.BaseUrl);
-        client.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{saferpayConfig.Username}:{saferpayConfig.Password}")));
-    });
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Add services to the container.
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
-app.MapGet("/", () => "Hello World!");
-app.MapPost("/api/saferpay", async (SaferpayServiceClient client) =>
-{
-    //client.pa
-    var response = "";//await client.tr
-    return response;
-});
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.Run();

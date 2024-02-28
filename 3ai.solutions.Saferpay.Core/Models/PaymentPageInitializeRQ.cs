@@ -1,3 +1,5 @@
+using System;
+
 namespace _3ai.solutions.Saferpay.Models
 {
     public class PaymentPageInitializeRQ
