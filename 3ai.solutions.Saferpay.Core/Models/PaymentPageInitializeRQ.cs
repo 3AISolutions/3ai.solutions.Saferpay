@@ -2,9 +2,13 @@ using System;
 
 namespace _3ai.solutions.Saferpay.Models
 {
-    public class PaymentPageInitializeRQ
+    public class BaseRequest
     {
         public RequestHeader RequestHeader { get; set; }
+    }
+
+    public class PaymentPageInitializeRQ : BaseRequest
+    {
         public string TerminalId { get; set; }
         public Payment Payment { get; set; }
         public ReturnUrl ReturnUrl { get; set; }
@@ -15,12 +19,11 @@ namespace _3ai.solutions.Saferpay.Models
         public RequestHeader RequestHeader { get; set; }
         public string Token { get; set; }
         public string Expiration { get; set; }
-        public string ReturnUrl { get; set; }
+        public string RedirectUrl { get; set; }
     }
 
-    public class PaymentPageAssertRQ
+    public class PaymentPageAssertRQ : BaseRequest
     {
-        public RequestHeader RequestHeader { get; set; }
         public string Token { get; set; }
     }
 
@@ -32,9 +35,8 @@ namespace _3ai.solutions.Saferpay.Models
         public Liability Liability { get; set; }
     }
 
-    public class TransactionCaptureRQ
+    public class TransactionCaptureRQ : BaseRequest
     {
-        public RequestHeader RequestHeader { get; set; }
         public TransactionReference TransactionReference { get; set; }
     }
 

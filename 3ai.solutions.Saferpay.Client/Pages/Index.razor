@@ -1,13 +1,14 @@
 ﻿@page "/"
 @using _3ai.solutions.Saferpay.Models;
 @inject _3ai.solutions.Saferpay.SaferpayService saferpayService;
+@inject Microsoft.Extensions.Options.IOptions<SaferpayConfig> saferpayConfig;
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
-<iframe src="@url"></iframe>
+<iframe src="@url" width="500px" height="500px"></iframe>
 
 @code
 {
@@ -16,14 +17,7 @@ Welcome to your new app.
     {
         var response = saferpayService.PaymentPageInitialize(new PaymentPageInitializeRQ()
             {
-                RequestHeader = new RequestHeader()
-                {
-                    SpecVersion = "1.20",
-                    CustomerId = "12345",
-                    RequestId = "12345",
-                    RetryIndicator = 0
-                },
-                TerminalId = "12345",
+                TerminalId = saferpayConfig.Value.TerminalId,
                 Payment = new Payment()
                 {
                     Amount = new Amount()
@@ -31,14 +25,14 @@ Welcome to your new app.
                         Value = "1000",
                         CurrencyCode = "CHF"
                     },
-                    OrderId = "12345",
+                    OrderId = Guid.NewGuid().ToString(),
                     Description = "Test"
                 },
                 ReturnUrl = new ReturnUrl()
                 {
-                    Url = "https://www.3ai.solutions"
+                    Url = "https://localhost:7279/PaymentRedirectEndpoint"
                 }
             });
-        url = response.ReturnUrl;
+        url = response.RedirectUrl;
     }
 }
