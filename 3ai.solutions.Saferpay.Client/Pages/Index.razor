@@ -7,12 +7,38 @@
 
 Welcome to your new app.
 
-<iframe src=""></iframe>
+<iframe src="@url"></iframe>
 
 @code
 {
+    string url;
     protected override void OnInitialized()
     {
-        var response = saferpayService.PaymentPageInitialize(new PaymentPageInitializeRQ() { });
+        var response = saferpayService.PaymentPageInitialize(new PaymentPageInitializeRQ()
+            {
+                RequestHeader = new RequestHeader()
+                {
+                    SpecVersion = "1.20",
+                    CustomerId = "12345",
+                    RequestId = "12345",
+                    RetryIndicator = 0
+                },
+                TerminalId = "12345",
+                Payment = new Payment()
+                {
+                    Amount = new Amount()
+                    {
+                        Value = "1000",
+                        CurrencyCode = "CHF"
+                    },
+                    OrderId = "12345",
+                    Description = "Test"
+                },
+                ReturnUrl = new ReturnUrl()
+                {
+                    Url = "https://www.3ai.solutions"
+                }
+            });
+        url = response.ReturnUrl;
     }
 }
