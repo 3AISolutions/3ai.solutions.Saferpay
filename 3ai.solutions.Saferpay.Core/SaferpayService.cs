@@ -37,25 +37,37 @@ namespace _3ai.solutions.Saferpay
         {
             if (string.IsNullOrEmpty(request.TerminalId))
                 request.TerminalId = _terminalId;
-            return Invoke<PaymentPageInitializeRS, PaymentPageInitializeRQ>("Payment/v1/PaymentPage/Initialize", request, "POST");
+            return Invoke<PaymentPageInitializeRS, PaymentPageInitializeRQ>("Payment/v1/PaymentPage/Initialize", request);
         }
 
         public PaymentPageAssertRS PaymentPageAssert(PaymentPageAssertRQ request)
         {
-            return Invoke<PaymentPageAssertRS, PaymentPageAssertRQ>("Payment/v1/PaymentPage/Assert", request, "POST");
+            return Invoke<PaymentPageAssertRS, PaymentPageAssertRQ>("Payment/v1/PaymentPage/Assert", request);
+        }
+
+        public TransactionInitializeRS TransactionInitialize(TransactionInitializeRQ request)
+        {
+            if (string.IsNullOrEmpty(request.TerminalId))
+                request.TerminalId = _terminalId;
+            return Invoke<TransactionInitializeRS, TransactionInitializeRQ>("Payment/v1/Transaction/Initialize", request);
+        }
+
+        public TransactionAuthorizeRS TransactionAuthorize(TransactionAuthorizeRQ request)
+        {
+            return Invoke<TransactionAuthorizeRS, TransactionAuthorizeRQ>("Payment/v1/Transaction/Authorize", request);
         }
 
         public TransactionCaptureRS TransactionCapture(TransactionCaptureRQ request)
         {
-            return Invoke<TransactionCaptureRS, TransactionCaptureRQ>("Payment/v1/Transaction/Capture", request, "POST");
+            return Invoke<TransactionCaptureRS, TransactionCaptureRQ>("Payment/v1/Transaction/Capture", request);
         }
 
         public TransactionCancelRS TransactionCancel(TransactionCancelRQ request)
         {
-            return Invoke<TransactionCancelRS, TransactionCancelRQ>("Payment/v1/Transaction/Cancel", request, "POST");
+            return Invoke<TransactionCancelRS, TransactionCancelRQ>("Payment/v1/Transaction/Cancel", request);
         }
 
-        private Tout Invoke<Tout, Tin>(string uri, Tin request, string method) where Tin : BaseRequest
+        private Tout Invoke<Tout, Tin>(string uri, Tin request) where Tin : BaseRequest
         {
             using (var webClient = new NoKeepAliveWebClient
             {
@@ -63,27 +75,20 @@ namespace _3ai.solutions.Saferpay
             })
             {
                 webClient.Headers.Add(_authHeader.Key, _authHeader.Value);
-                string responseString;
-                if (request != null)
-                {
-                    if (request.RequestHeader == null)
-                    {
-                        request.RequestHeader = new RequestHeader();
-                    }
-                    request.RequestHeader.SpecVersion = "1.38";
-                    request.RequestHeader.CustomerId = _customerId;
-                    if (string.IsNullOrEmpty(request.RequestHeader.RequestId))
-                        request.RequestHeader.RequestId = Guid.NewGuid().ToString();
 
-                    webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                    webClient.Headers.Add("Accept", "application/json");
-                    webClient.Encoding = System.Text.Encoding.UTF8;
-                    responseString = webClient.UploadString(uri, method, Newtonsoft.Json.JsonConvert.SerializeObject(request));
-                }
-                else
-                {
-                    responseString = webClient.DownloadString(uri);
-                }
+                if (request.RequestHeader == null)
+                    request.RequestHeader = new RequestHeader();
+                request.RequestHeader.SpecVersion = "1.38";
+                if (string.IsNullOrEmpty(request.RequestHeader.CustomerId))
+                    request.RequestHeader.CustomerId = _customerId;
+                if (string.IsNullOrEmpty(request.RequestHeader.RequestId))
+                    request.RequestHeader.RequestId = Guid.NewGuid().ToString();
+
+                webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
+                webClient.Headers.Add("Accept", "application/json");
+                webClient.Encoding = System.Text.Encoding.UTF8;
+                string responseString = webClient.UploadString(uri, "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request));
+
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<Tout>(responseString);
             }
         }
