@@ -1,5 +1,6 @@
 ﻿@page "/"
-
+@using _3ai.solutions.Saferpay.Models;
+@inject _3ai.solutions.Saferpay.SaferpayService saferpayService;
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
@@ -10,8 +11,8 @@ Welcome to your new app.
 
 @code
 {
-    void OnInitialized()
+    protected override void OnInitialized()
     {
-        Console.WriteLine("OnInitialized");
+        var response = saferpayService.PaymentPageInitialize(new PaymentPageInitializeRQ() { });
     }
 }
