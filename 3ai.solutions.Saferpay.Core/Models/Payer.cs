@@ -1,7 +1,12 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace _3ai.solutions.Saferpay.Models
 {
     public class Payer
     {
-        public string LanguageCode { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))] public LanguageCode LanguageCode { get; set; }
+        public string IpAddress { get; set; }
+        public string Ipv6Address { get; set; }
     }
 }
