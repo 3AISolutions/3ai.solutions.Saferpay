@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using _3ai.solutions.Saferpay.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace _3ai.solutions.Saferpay
 {
@@ -86,9 +88,9 @@ namespace _3ai.solutions.Saferpay
                     request.RequestHeader.RequestId = Guid.NewGuid().ToString();
 
 
-                string responseString = webClient.UploadString(uri, "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request));
+                string responseString = webClient.UploadString(uri, "POST", JsonConvert.SerializeObject(request, new StringEnumConverter()));
 
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<Tout>(responseString);
+                return JsonConvert.DeserializeObject<Tout>(responseString);
             }
         }
     }
