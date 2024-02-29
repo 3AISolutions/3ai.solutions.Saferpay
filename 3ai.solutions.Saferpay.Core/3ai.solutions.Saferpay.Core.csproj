@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>_3ai.solutions.Saferpay.Core</RootNamespace>
     <Version>2.$([System.DateTime]::UtcNow.Date.Subtract($([System.DateTime]::Parse("2000-01-01"))).TotalDays).$([System.DateTime]::UtcNow.Hour)</Version>
+    <RepositoryUrl> https://github.com/3AISolutions/3ai.solutions.Saferpay</RepositoryUrl>
   </PropertyGroup>
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
