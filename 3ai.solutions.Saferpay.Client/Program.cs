@@ -32,10 +32,9 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-app.MapGet("/PaymentRedirectEndpoint", (context) =>
+app.MapGet("/PaymentRedirectEndpoint", () =>
 {
-    var request = context.Request;
-    return Task.CompletedTask;
+    return Results.Content("<script>window.parent.location.href = '/Counter';</script>", "text/html");
 });
 
 app.Run();
