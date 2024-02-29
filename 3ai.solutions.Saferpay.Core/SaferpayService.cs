@@ -45,18 +45,6 @@ namespace _3ai.solutions.Saferpay
             return Invoke<PaymentPageAssertRS, PaymentPageAssertRQ>("Payment/v1/PaymentPage/Assert", request);
         }
 
-        // public TransactionInitializeRS TransactionInitialize(TransactionInitializeRQ request)
-        // {
-        //     if (string.IsNullOrEmpty(request.TerminalId))
-        //         request.TerminalId = _terminalId;
-        //     return Invoke<TransactionInitializeRS, TransactionInitializeRQ>("Payment/v1/Transaction/Initialize", request);
-        // }
-
-        // public TransactionAuthorizeRS TransactionAuthorize(TransactionAuthorizeRQ request)
-        // {
-        //     return Invoke<TransactionAuthorizeRS, TransactionAuthorizeRQ>("Payment/v1/Transaction/Authorize", request);
-        // }
-
         public TransactionCaptureRS TransactionCapture(TransactionCaptureRQ request)
         {
             return Invoke<TransactionCaptureRS, TransactionCaptureRQ>("Payment/v1/Transaction/Capture", request);
