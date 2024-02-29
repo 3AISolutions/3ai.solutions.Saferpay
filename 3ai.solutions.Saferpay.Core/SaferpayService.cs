@@ -72,6 +72,11 @@ namespace _3ai.solutions.Saferpay
             return Invoke<TransactionRefundRS, TransactionRefundRQ>("Payment/v1/Transaction/Refund", request);
         }
 
+        public TransactionInquireRS TransactionInquire(TransactionInquireRQ request)
+        {
+            return Invoke<TransactionInquireRS, TransactionInquireRQ>("Payment/v1/Transaction/Inquire", request);
+        }
+
         private Tout Invoke<Tout, Tin>(string uri, Tin request) where Tin : BaseRequest
         {
             using (var webClient = new NoKeepAliveWebClient
