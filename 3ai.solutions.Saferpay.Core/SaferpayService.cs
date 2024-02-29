@@ -45,17 +45,17 @@ namespace _3ai.solutions.Saferpay
             return Invoke<PaymentPageAssertRS, PaymentPageAssertRQ>("Payment/v1/PaymentPage/Assert", request);
         }
 
-        public TransactionInitializeRS TransactionInitialize(TransactionInitializeRQ request)
-        {
-            if (string.IsNullOrEmpty(request.TerminalId))
-                request.TerminalId = _terminalId;
-            return Invoke<TransactionInitializeRS, TransactionInitializeRQ>("Payment/v1/Transaction/Initialize", request);
-        }
+        // public TransactionInitializeRS TransactionInitialize(TransactionInitializeRQ request)
+        // {
+        //     if (string.IsNullOrEmpty(request.TerminalId))
+        //         request.TerminalId = _terminalId;
+        //     return Invoke<TransactionInitializeRS, TransactionInitializeRQ>("Payment/v1/Transaction/Initialize", request);
+        // }
 
-        public TransactionAuthorizeRS TransactionAuthorize(TransactionAuthorizeRQ request)
-        {
-            return Invoke<TransactionAuthorizeRS, TransactionAuthorizeRQ>("Payment/v1/Transaction/Authorize", request);
-        }
+        // public TransactionAuthorizeRS TransactionAuthorize(TransactionAuthorizeRQ request)
+        // {
+        //     return Invoke<TransactionAuthorizeRS, TransactionAuthorizeRQ>("Payment/v1/Transaction/Authorize", request);
+        // }
 
         public TransactionCaptureRS TransactionCapture(TransactionCaptureRQ request)
         {
@@ -65,6 +65,11 @@ namespace _3ai.solutions.Saferpay
         public TransactionCancelRS TransactionCancel(TransactionCancelRQ request)
         {
             return Invoke<TransactionCancelRS, TransactionCancelRQ>("Payment/v1/Transaction/Cancel", request);
+        }
+
+        public TransactionRefundRS TransactionRefund(TransactionRefundRQ request)
+        {
+            return Invoke<TransactionRefundRS, TransactionRefundRQ>("Payment/v1/Transaction/Refund", request);
         }
 
         private Tout Invoke<Tout, Tin>(string uri, Tin request) where Tin : BaseRequest
