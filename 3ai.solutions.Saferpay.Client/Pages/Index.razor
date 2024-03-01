@@ -1,18 +1,21 @@
 ﻿@page "/"
 @using _3ai.solutions.Saferpay.Models;
 @inject _3ai.solutions.Saferpay.SaferpayService saferpayService;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
-
+<a href="https://docs.saferpay.com/home/integration-guide/testing-and-go-live">Test Cards</a> <br />
 <iframe src="@url" width="500px" height="500px"></iframe>
+
 
 @code
 {
     string url = string.Empty;
-    protected override void OnInitialized()
+    protected override async void OnInitialized()
     {
         var response = saferpayService.PaymentPageInitialize(new PaymentPageInitializeRQ()
             {
@@ -21,17 +24,20 @@ Welcome to your new app.
                     Amount = new Amount()
                     {
                         Value = "1000",
-                        CurrencyCode = "CHF"
+                        CurrencyCode = "EUR"
                     },
-                    OrderId = Guid.NewGuid().ToString(),
-                    Description = "Test"
+                    OrderId = $"BC{DateTime.Now.ToString("yyMMddHHmmss")}-1",
+                    Description = "Test",
                 },
                 ReturnUrl = new ReturnUrl()
                 {
                     Url = "https://localhost:7279/PaymentRedirectEndpoint"
-                }
+                },
+                Payer = new() { LanguageCode = LanguageCode.el  }
             });
         //url = response.Redirect.RedirectUrl;
+        
         url = response.RedirectUrl;
+        await ProtectedSessionStore.SetAsync("token", response.Token);
     }
 }
