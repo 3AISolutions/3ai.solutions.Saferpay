@@ -26,14 +26,14 @@ Welcome to your new app.
                         Value = "1000",
                         CurrencyCode = "EUR"
                     },
-                    OrderId = $"BC{DateTime.Now.ToString("yyMMddHHmmss")}-1",
+                    OrderId = $"BC{DateTime.Now.ToString("yyMMddHH")}-1",
                     Description = "Test",
                 },
                 ReturnUrl = new ReturnUrl()
                 {
                     Url = "https://localhost:7279/PaymentRedirectEndpoint"
                 },
-                Payer = new() { LanguageCode = LanguageCode.el  }
+                Payer = new() { LanguageCode = LanguageCode.en, BillingAddress = new() { FirstName="Test", LastName = "Testy", Email= "test@host.com", Phone = "99-9797897" }   }
             });
         //url = response.Redirect.RedirectUrl;
         

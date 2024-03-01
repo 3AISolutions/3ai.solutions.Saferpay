@@ -6,7 +6,10 @@
 
 <PageTitle>Counter</PageTitle>
 
-@token
+token: @token <br/>
+Status: @status
+<br />
+CaptureId: @captureId 
 
 <h1>Counter</h1>
 
@@ -17,6 +20,8 @@
 @code {
     private int currentCount = 0;
     string? token;
+    string? status;
+    string? captureId;
     protected override async void OnInitialized()
     {
         var result = await ProtectedSessionStore.GetAsync<string>("token");
@@ -25,18 +30,37 @@
         if (!string.IsNullOrEmpty(token))
         {
             var rs = saferpayService.PaymentPageAssert(new() { Token = token });
+            status = rs.Transaction.Status.ToString();
             if (rs is not null && rs.Transaction.Status == TransactionStatus.AUTHORIZED)
             {
                 var rss = saferpayService.TransactionCapture(new() { TransactionReference = new() { TransactionId = rs.Transaction.Id } });
-                var st = rss.Status;
+                captureId = rss.CaptureId;
+                status = rss.Status.ToString();
+
             }
-            
+            else if (rs.Transaction.Status == TransactionStatus.AUTHORIZED)
+            {
+                var rss = saferpayService.TransactionInquire(new() { TransactionReference = new() { TransactionId = rs.Transaction.Id } });
+                var st = rss.Transaction.Status;
+
+            }
+
+
         }
         //saferpayService.TransactionInquire(new() { TransactionReference = new() { TransactionId } })
     }
 
     private void IncrementCount()
     {
+     var resp =    saferpayService.TransactionRefund(new TransactionRefundRQ
+        {
+            CaptureReference = new CaptureReference { CaptureId = captureId },
+            
+                Refund = new Refund { Amount = new() { Value = "500", CurrencyCode = "EUR" }, OrderId = $"BC{DateTime.Now.ToString("yyMMddHH")}-1" }
+        });
+
+        var rss = saferpayService.TransactionCapture(new() { TransactionReference = new() { TransactionId = resp.Transaction.Id } });
+
         currentCount++;
     }
 }
