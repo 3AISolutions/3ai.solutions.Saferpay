@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using _3ai.solutions.Saferpay.Models;
 using Newtonsoft.Json;
@@ -7,19 +8,6 @@ using Newtonsoft.Json.Converters;
 
 namespace _3ai.solutions.Saferpay
 {
-    public class NoKeepAliveWebClient : WebClient
-    {
-        protected override WebRequest GetWebRequest(Uri address)
-        {
-            var request = base.GetWebRequest(address) as HttpWebRequest;
-            if (request != null)
-            {
-                request.KeepAlive = false;
-            }
-            return request;
-        }
-    }
-
     public class SaferpayService
     {
         private readonly string _baseUri;
@@ -69,28 +57,35 @@ namespace _3ai.solutions.Saferpay
 
         private Tout Invoke<Tout, Tin>(string uri, Tin request) where Tin : BaseRequest
         {
-            using (var webClient = new NoKeepAliveWebClient
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(_baseUri + uri);
+            httpWebRequest.KeepAlive = false;
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Headers.Add(_authHeader.Key, _authHeader.Value);
+            httpWebRequest.Headers.Add("Accept", "application/json");
+
+            if (request.RequestHeader == null)
+                request.RequestHeader = new RequestHeader();
+            request.RequestHeader.SpecVersion = "1.38";
+            if (string.IsNullOrEmpty(request.RequestHeader.CustomerId))
+                request.RequestHeader.CustomerId = _customerId;
+            if (string.IsNullOrEmpty(request.RequestHeader.RequestId))
+                request.RequestHeader.RequestId = Guid.NewGuid().ToString();
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                BaseAddress = _baseUri,
-                Encoding = System.Text.Encoding.UTF8
-            })
+                string json = JsonConvert.SerializeObject(request, new StringEnumConverter());
+                streamWriter.Write(json);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
+                throw new Exception($"Saferpay API returned status code {httpResponse.StatusCode} {httpResponse.StatusDescription}");
+
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
-                webClient.Headers.Add(_authHeader.Key, _authHeader.Value);
-                webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                webClient.Headers.Add("Accept", "application/json");
-
-                if (request.RequestHeader == null)
-                    request.RequestHeader = new RequestHeader();
-                request.RequestHeader.SpecVersion = "1.38";
-                if (string.IsNullOrEmpty(request.RequestHeader.CustomerId))
-                    request.RequestHeader.CustomerId = _customerId;
-                if (string.IsNullOrEmpty(request.RequestHeader.RequestId))
-                    request.RequestHeader.RequestId = Guid.NewGuid().ToString();
-
-
-                string responseString = webClient.UploadString(uri, "POST", JsonConvert.SerializeObject(request, new StringEnumConverter()));
-
-                return JsonConvert.DeserializeObject<Tout>(responseString);
+                var result = streamReader.ReadToEnd();
+                return JsonConvert.DeserializeObject<Tout>(result);
             }
         }
     }
