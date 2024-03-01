@@ -4,6 +4,5 @@ namespace _3ai.solutions.Saferpay.Models
     {
         public Refund Refund { get; set; }
         public CaptureReference CaptureReference { get; set; }
-        public string OrderId { get; set; }
     }
 }
