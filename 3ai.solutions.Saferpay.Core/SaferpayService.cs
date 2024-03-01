@@ -85,7 +85,7 @@ namespace _3ai.solutions.Saferpay
                 if (string.IsNullOrEmpty(request.RequestHeader.RequestId))
                     request.RequestHeader.RequestId = Guid.NewGuid().ToString();
 
-
+                string requestRq = Newtonsoft.Json.JsonConvert.SerializeObject(request);
                 string responseString = webClient.UploadString(uri, "POST", Newtonsoft.Json.JsonConvert.SerializeObject(request));
 
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<Tout>(responseString);
