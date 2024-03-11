@@ -62,7 +62,8 @@ namespace _3ai.solutions.Saferpay
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add(_authHeader.Key, _authHeader.Value);
-            httpWebRequest.Headers.Add("Accept", "application/json");
+            //httpWebRequest.Headers.Add("Accept", "application/json");
+            httpWebRequest.Accept = "application/json";
 
             if (request.RequestHeader == null)
                 request.RequestHeader = new RequestHeader();

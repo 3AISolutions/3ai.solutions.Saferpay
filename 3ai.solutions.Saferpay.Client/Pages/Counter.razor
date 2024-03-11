@@ -29,7 +29,9 @@ CaptureId: @captureId
 
         if (!string.IsNullOrEmpty(token))
         {
+            
             var rs = saferpayService.PaymentPageAssert(new() { Token = token });
+            
             status = rs.Transaction.Status.ToString();
             if (rs is not null && rs.Transaction.Status == TransactionStatus.AUTHORIZED)
             {
