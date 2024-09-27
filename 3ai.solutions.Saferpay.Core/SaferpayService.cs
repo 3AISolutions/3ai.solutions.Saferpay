@@ -79,14 +79,29 @@ namespace _3ai.solutions.Saferpay
                 streamWriter.Write(json);
             }
 
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            if (httpResponse.StatusCode != HttpStatusCode.OK)
-                throw new Exception($"Saferpay API returned status code {httpResponse.StatusCode} {httpResponse.StatusDescription}");
-
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            try
             {
-                var result = streamReader.ReadToEnd();
-                return JsonConvert.DeserializeObject<Tout>(result);
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<Tout>(result);
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    {
+                        using (var streamReader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
+                            var errorContent = streamReader.ReadToEnd();
+                            //return (default(Tout), errorResponse.StatusCode, errorContent);
+                        }
+                    }
+                }
+                throw;
             }
         }
     }
