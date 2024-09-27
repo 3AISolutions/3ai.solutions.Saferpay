@@ -55,14 +55,13 @@ namespace _3ai.solutions.Saferpay
             return Invoke<TransactionInquireRS, TransactionInquireRQ>("Payment/v1/Transaction/Inquire", request);
         }
 
-        private Tout Invoke<Tout, Tin>(string uri, Tin request) where Tin : BaseRequest
+        private Tout Invoke<Tout, Tin>(string uri, Tin request) where Tin : BaseRequest where Tout : BaseResponse
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(_baseUri + uri);
             httpWebRequest.KeepAlive = false;
             httpWebRequest.ContentType = "application/json; charset=utf-8";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add(_authHeader.Key, _authHeader.Value);
-            //httpWebRequest.Headers.Add("Accept", "application/json");
             httpWebRequest.Accept = "application/json";
 
             if (request.RequestHeader == null)
@@ -97,11 +96,20 @@ namespace _3ai.solutions.Saferpay
                         using (var streamReader = new StreamReader(errorResponse.GetResponseStream()))
                         {
                             var errorContent = streamReader.ReadToEnd();
-                            //return (default(Tout), errorResponse.StatusCode, errorContent);
+                            return (Tout)new BaseResponse()
+                            {
+                                ErrorMessage = JsonConvert.DeserializeObject<ErrorMessageResponse>(errorContent)
+                            };
                         }
                     }
                 }
-                throw;
+                return (Tout)new BaseResponse()
+                {
+                    ErrorMessage = new ErrorMessageResponse()
+                    {
+                        ErrorMessage = ex.Message
+                    }
+                };
             }
         }
     }
